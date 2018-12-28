@@ -21,11 +21,8 @@ Copy the content of the release folder to your device. Open the file /etc/cister
 ```sh
 $ nano /etc/cisterna.conf
 ```
-<details><summary>cisterna.conf - Configuration Description and file example</summary>
-<p>
-
-```
-<!-- language: lang-none -->
+### cisterna.conf - Configuration Description and file example
+```sh
 Info: Cistern is at 100%, if the water level of the ceiling has 16cm distance. The height of the cisterne is 223.00cm. Diameter of the cistern is: 207.00cm
 //|----------------------|
 //|    (_) SENSOR (_)    |
@@ -38,9 +35,9 @@ Info: Cistern is at 100%, if the water level of the ceiling has 16cm distance. T
 //|()()()()()()()()()()()|   } Usable water: height and volume
 //|()()()()()()()()()()()|   }
 //|()()()()()()()()()()()|   }
-//|----------------------|  --> Sediment height (fSuctionHead) = intake END!
+//|----------------------|   --> Sediment height (fSuctionHead) = intake END!
 //||||||||||||||||||||||||
-//|----------------------|  --> ZERO Cisterna
+//|----------------------|   --> ZERO Cisterna
 ```
 
 | Setting | Description | Value|
@@ -81,8 +78,6 @@ CISTERNA_ARG=\
  --SurfaceOffSet=0\
  --InternalOffSet=1.2
 ```
-</p>
-</details>
 
 After your configurations is set, just start the cisterna:
 ```sh
