@@ -1,0 +1,19 @@
+[Unit]
+Description=Cisterna Daemon
+After=network.target
+
+[Service]
+EnvironmentFile=/etc/cisterna.conf
+ExecStart=/opt/cisterna/cisterna $CISTERNA_ARG
+
+#User=pi
+#Group=pi
+#Type=notify
+
+#Restart=on-failure
+#RestartSec=10
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target network-online.target

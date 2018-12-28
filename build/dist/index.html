@@ -1,0 +1,281 @@
+<!-- HTML for static distribution bundle build -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Cisterna v0.1 - (c) Erkan Çolak</title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Source+Code+Pro:300,600|Titillium+Web:400,600,700" rel="stylesheet">
+    <script src="http://d3js.org/d3.v3.min.js" language="JavaScript"></script>
+    <script src="liquidFillGauge.js" language="JavaScript"></script>
+    <script src="barstacker.js" language="JavaScript"></script>
+    <link rel="stylesheet" type="text/css" href="./swagger-ui.css" >
+    <link rel="icon" type="image/png" href="./favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="./favicon-16x16.png" sizes="16x16" />
+    <style>
+      
+      .liquidFillGaugeText { font-family: Helvetica; font-weight: bold; }
+      html
+      {
+        box-sizing: border-box;
+        overflow: -moz-scrollbars-vertical;
+        overflow-y: scroll;
+      }
+
+      .wrapper {
+        display: flex;  
+        flex-flow: row wrap;
+        font-weight: bold;
+        text-align: center;
+      }
+
+      .wrapper > * {
+        padding: 10px;
+        flex: 1 100%;
+      }
+
+      .header {
+      }
+
+      .footer {
+      }
+
+      .main {
+        text-align: left;
+        padding-left: 0px;
+      }
+
+      .aside-1 {
+        padding: 50px;
+      }
+
+      .aside-2 {
+        padding-left: 0px;
+        padding-bottom: 0px;
+        padding-top: 10px;
+        max-width: 80px;
+      }
+
+      @media all and (min-width: 600px) {
+        .aside { flex: 1 auto; }
+      }
+
+      @media all and (min-width: 800px) {
+        .main    { flex: 3 0px; }
+        .aside-2 { order: 1; } 
+        .main    { order: 2; }
+        .aside-1 { order: 3; }
+        .footer  { order: 4; }
+      }
+
+      body {
+        padding: 2em; 
+      }
+
+      *,
+      *:before,
+      *:after
+      {
+        box-sizing: inherit;
+      }
+
+      body
+      {
+        margin:0;
+        background: #fafafa;
+      }
+      table, th, td
+      {
+        padding: 5px;
+        border: 1px solid #ddd;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+      }
+      tr:hover 
+      {
+        background-color: #f5f5f5;
+      }
+      th 
+      {
+        background-color: #89bf04;
+        color: white;
+      }
+    </style>
+  </head>
+
+  <body>
+  <script> 
+    var gauge, gauge2, stacker;
+
+    function LiquidFillGauge(iValue){
+      var gaugecfg =  liquidFillGaugeDefaultSettings(); // CHeck: http://bl.ocks.org/brattonc/5e5ce9beee483220e2f6
+      gaugecfg.minValue           = 0;          // The gauge minimum value.
+      gaugecfg.maxValue           = 9000;       // The gauge maximum value.
+      gaugecfg.circleThickness    = 0.05;       // The outer circle thickness as a percentage of it's radius.
+      gaugecfg.circleFillGap      = 0.03;       // The size of the gap between the outer circle and wave circle as a percentage of the outer circles radius.
+      gaugecfg.circleColor        = "#547f00";  // The color of the outer circle.
+      gaugecfg.waveHeight         = 0.05;       // The wave height as a percentage of the radius of the wave circle.
+      gaugecfg.waveCount          = 1;          // The number of full waves per width of the wave circle.
+      gaugecfg.waveRiseTime       = 2000;       // The amount of time in milliseconds for the wave to rise from 0 to it's final height.
+      gaugecfg.waveAnimateTime    = 1000;       // The amount of time in milliseconds for a full wave to enter the wave circle.
+      gaugecfg.waveRise           = true;       // Control if the wave should rise from 0 to it's full height;or start at it's full height.
+      gaugecfg.waveHeightScaling  = true;       // Controls wave size scaling at low and high fill percentages. When true, wave height reaches it's maximum at 50% fill, and minimum at 0% and 100% fill. This helps to prevent the wave from making the wave circle from appear totally full or empty when near it's minimum or maximum fill.
+      gaugecfg.waveAnimate        = true;       // Controls if the wave scrolls or is static.
+      gaugecfg.waveColor          = "#89bf04";  // The color of the fill wave.
+      gaugecfg.waveOffset         = 0;          // The amount to initially offset the wave. 0 = no offset. 1 = offset of one full wave.
+      gaugecfg.textVertPosition   = .5;         // The height at which to display the percentage text withing the wave circle. 0 = bottom, 1 = top.
+      gaugecfg.textSize           = .5;         // The relative height of the text to display in the wave circle. 1 = 50%
+      gaugecfg.valueCountUp       = true;       // If true, the displayed value counts up from 0 to it's final value upon loading. If false, the final value is displayed.
+      gaugecfg.displaySuffix      = ' liter';   // If true, a % symbol is displayed after the value.
+      gaugecfg.textColor          = "#89bf04";  // The color of the value text when the wave does not overlap it.
+      gaugecfg.waveTextColor      = "#547f00";  // The color of the value text when the wave overlaps it.
+      
+      if(iValue < 2000 ) gaugecfg.waveColor= "#f93e3e";
+      if(!gauge) gauge  =  loadLiquidFillGauge('fillgauge', 100, gaugecfg);
+      gauge.update(iValue);
+    }
+
+    function LiquidFillGauge2(iValue) {
+      var gaugecfg = liquidFillGaugeDefaultSettings();
+      gaugecfg.circleColor       = "#547f00";
+      gaugecfg.textColor         = "#89bf04";
+      gaugecfg.textSize          = .8;
+      gaugecfg.waveTextColor     = "#547f00";
+      gaugecfg.waveColor         = "#89bf04";
+      gaugecfg.circleThickness   = 0.1;
+      gaugecfg.circleFillGap     = 0.1;
+      gaugecfg.textVertPosition  = 0.5;
+      gaugecfg.waveAnimateTime   = 0;
+      gaugecfg.waveHeight        = 0;
+      gaugecfg.waveCount         = 1;
+
+      if(iValue < 25 ) gaugecfg.waveColor = "#f93e3e";
+      if(!gauge2) gauge2 = loadLiquidFillGauge("fillgauge2", 100, gaugecfg);
+      gauge2.update(iValue);
+    }
+
+    function StackerDistance(iValue){
+      var stackercfg = barStackerDefaultSettings();  // CHeck: http://bl.ocks.org/brattonc/d54d1c9d33aa13491279
+      stackercfg.barThickness     = .5;
+      stackercfg.barBoxPadding    = 6;
+      stackercfg.barPadding       = 1;
+      stackercfg.textPx           = 18;
+      stackercfg.maxValue         = 200;
+      stackercfg.color            = "#89bf04";
+      stackercfg.cornerRoundingX  = 0;
+      stackercfg.cornerRoundingY  = 0;
+      stackercfg.vertical         =  true;
+      stackercfg.textLeftTop      =  true;
+      stackercfg.valuePrefix      =  "Distance to surface: ";
+      stackercfg.valuePostfix     = " cm";
+      stackercfg.valueAnimateTime = 2000;
+      
+      if(!stacker) stacker = loadBarStacker("stacker", "",100, stackercfg);
+      stacker.update(iValue);
+    }
+
+    function ConsoleLogInfo(vThis) { 
+      if(vThis.readyState == vThis.DONE ) 
+        console.log('Response: ' + vThis.responseText + '  (URL:'+vThis.responseURL+')'); 
+    }
+
+    function EventUpdate() { 
+      InjectMyTable(); //ConsoleLogInfo(this); 
+      if(document.getElementById(this.tID) && this.readyState == this.DONE) {
+        document.getElementById(this.tID).textContent=this.responseText;
+        switch (this.tID) {
+          case 't5': LiquidFillGauge( this.responseText); break;
+          case 't3': LiquidFillGauge2(this.responseText); break;
+          case 't0': StackerDistance( this.responseText); break; 
+        }
+      }
+    }
+ 
+    function GetDistanceLive() {
+      var aAPICalls = [ 't0', '/v1/values/distancelive'     ,
+                        't1', '/v1/values/distance'         ,
+                        't2', '/v1/values/cistvolmaxinliter',
+                        't3', '/v1/values/cistvolinpercent'  ,
+                        't4', '/v1/values/state'            ,
+                        't5', '/v1/values/cistvolinliter'   ,
+                        't6', '/v1/values/watersuctionstate'
+                      ];
+
+      for( var i = 0; i < aAPICalls.length; i++) { 
+        GetAPIRequests(i, aAPICalls[i], aAPICalls[++i]);
+      }
+    }
+
+    function GetAPIRequests(i, tID, callAPI){
+      var xhr     = [];
+      xhr[i]      = new XMLHttpRequest();
+      xhr[i].tID  = tID;
+      xhr[i].addEventListener("load", EventUpdate);
+      xhr[i].open("GET", callAPI);
+      xhr[i].send();
+    }
+
+    function InjectMyTable(){
+      if(document.getElementById('tCist')) return 1; 
+      else {
+        var elements = document.getElementsByClassName("description");
+        var myCistValues=
+        '<div class="wrapper">'+
+        '<header class="header">Cisterna - Live Data</header>'+
+        '<article class="main"> '+
+        ' <table height="280px" id="tCist">'+
+        '    <tr><th><b>Name</b></th><th><b>Value</b></th><th><b>UNIT</b> </th></tr>'+
+        '    <tr><td>Measure-State</td><td id="t4">-</td><td style="text-align: center;">boolean</td></tr>'+
+        '    <tr><td>Water-Suction</td><td id="t6">-</td><td style="text-align: center;">boolean</td></tr>'+
+        '    <tr><td>Distance Live</td><td id="t0">-</td><td style="text-align: center;">cm   </td></tr>'+
+        '    <tr><td>Distance     </td><td id="t1">-</td><td style="text-align: center;">cm   </td></tr>'+
+        '    <tr><td>Volume       </td><td id="t5">-</td><td style="text-align: center;">Liter</td></tr>'+
+        '    <tr><td>Volume       </td><td id="t3">-</td><td style="text-align: center;">%    </td></tr>'+
+        '    <tr><td>Volume Max.  </td><td id="t2">-</td><td style="text-align: center;">Liter</td></tr>'+
+        ' </table>'+
+        '</article>'+
+        '<div class="wrapper">'+
+        '<aside class="aside aside-1">'+
+        '   <svg id="fillgauge"  width="150px" height="150px"/>'+
+        '   <svg id="fillgauge2" width="150px" height="150px"/>'+
+        '</aside>'+
+        '</div>'+
+        '<aside class="aside aside-2">'+
+        '   <svg id="stacker" width="78" height="280px"></svg>'+
+        '</aside>'+
+        '</div>'+
+        '';
+
+        if(elements.item(0)) elements.item(0).innerHTML = myCistValues;
+      }
+    }
+  </script>
+    <div id="preview-textfield"></div>
+    <div id="swagger-ui"></div>
+    <script src="./swagger-ui-bundle.js"> </script>
+    <script src="./swagger-ui-standalone-preset.js"> </script>
+    <script>
+    window.onload = function() {
+
+      // Build a system
+      const ui = SwaggerUIBundle({
+        url: "/rest.json",
+        dom_id: '#swagger-ui',
+        deepLinking: false,
+        presets: [
+          SwaggerUIBundle.presets.apis,
+          SwaggerUIStandalonePreset
+        ],
+        plugins: [
+          SwaggerUIBundle.plugins.DownloadUrl
+        ],
+        layout: "StandaloneLayout"
+      })
+
+      window.ui = ui
+      function myTimer() { GetDistanceLive(); }
+      var myVar = setInterval(myTimer, 1000);
+    }
+    
+  </script>
+  </body>
+</html>
