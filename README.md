@@ -1,5 +1,4 @@
 
-![Alt Text](https://media.giphy.com/media/8lHof6a8CWHJF5Xo9m/giphy.gif)
 
 # cisterna
 ***
@@ -10,7 +9,6 @@
 ```sh
 http://yourip/api
 ```
-![Alt Text](https://media.giphy.com/media/fQuIxoQpyOnKGaLxCW/giphy.gif)
 
 ### Installation and configuration
 ```sh
